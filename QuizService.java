@@ -1,33 +1,37 @@
-package spring.quiz.quiz;
+package com.quiz;
 
 import java.util.ArrayList;
+
 import java.util.List;
-import org.springframework.beans.factory.annotation.Autowired;
+
 import org.springframework.stereotype.Service;
 
 @Service
 public class QuizService {
-
-	@Autowired
-	private QuizRepository quizRepository;
-
-	public Quiz getByTitle(String title) {
-		return quizRepository.findById(title).orElse(null);
+	private final QuizRepository quizRepository;
+	
+	public QuizService(QuizRepository quizRepo) {
+		quizRepository = quizRepo;
 	}
 	
-	public List<Quiz> getBySkill(String skill){
-		List<Quiz> quizzes = new ArrayList<Quiz>();
-		quizRepository.findBySkill(skill).forEach(quizzes::add);
-		return quizzes;
+	public List<Quiz> getAllQuizzes(){
+		List<Quiz> list = new ArrayList<Quiz>();
+		quizRepository.findAll().forEach(list::add);
+		return list;
 	}
-
-	public void addQuiz(Quiz quiz) {
+	public List<Quiz>getAllBySkill(String skill){
+		List<Quiz>list = quizRepository.findAllBySkill(skill);
+		return list;
+	}
+	public void increment(String title) {
+		Quiz quiz = quizRepository.findById(title).get();
+		quiz.setNumberOfQuestion(quiz.getNumberOfQuestion() + 1);
 		quizRepository.save(quiz);
 	}
-
-	public List<Quiz> getAllQuizes() {
-		List<Quiz> quizes = new ArrayList<>();
-		quizRepository.findAll().forEach(quizes::add);
-		return quizes;
+	public Quiz getQuiz(String title) {
+		return quizRepository.findById(title).orElse(null);
+	}
+	public void addQuiz(Quiz quiz) {
+		quizRepository.save(quiz);
 	}
 }
