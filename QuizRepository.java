@@ -1,10 +1,11 @@
-package spring.quiz.quiz;
+package com.quiz;
 
 import java.util.List;
 
 import org.springframework.data.repository.CrudRepository;
+import org.springframework.stereotype.Repository;
 
-public interface QuizRepository extends CrudRepository<Quiz, String> {
-	public List<Quiz> findBySkill(String skill);
-
+@Repository
+public interface QuizRepository extends CrudRepository<Quiz, String>{
+  public List<Quiz>findAllBySkill(String skill); 
 }
