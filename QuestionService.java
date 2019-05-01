@@ -1,35 +1,37 @@
-package spring.quiz.question;
+package com.question;
 
 import java.util.List;
 
-import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-
 
 @Service
 public class QuestionService {
-	@Autowired
-	private QuestionRepository questionRepository;
+	private final QuestionRepository questionRepository;
 	
-	public List<Question> getByQuizTitle(String title){
-		return questionRepository.findAllByQuizTitle(title);
+	public QuestionService(QuestionRepository questionRepo) {
+		questionRepository = questionRepo;
 	}
-	
-	public Question getQuestion(Integer id) {
-		return questionRepository.findById(id).orElse(null);
+
+	public List<Question> findAllByQuiz(String title) {
+		List<Question> list = questionRepository.findAllByQuizTitle(title);
+		return list;
 	}
-	
-	public void addQuestion(Question question) {
-		question.getQuiz().inc();
+
+	public void addQuestoin(Question question) {
 		questionRepository.save(question);
 	}
-	
-	public void deleteQuestion(Integer id) {
-		getQuestion(id).getQuiz().inc();
-		questionRepository.deleteById(id);
+
+	public Question getByStatement(String statement) {
+		return questionRepository.findByStatement(statement);
 	}
 	
-	public void updateQuestion(Question question) {
-		questionRepository.save(question);
+	public boolean validateQuestion(Question question) {
+		String correctChoice;
+		String[] choices;
+		choices = question.getChoices();
+		correctChoice = question.getCorrectChoice();
+		
+		return (correctChoice.equals(choices[0]) || correctChoice.equals(choices[1])
+				|| correctChoice.equals(choices[2]) || correctChoice.equals(choices[3]));
 	}
 }
